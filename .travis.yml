@@ -1,8 +1,7 @@
 language: php
 
 php:
-  - 7.0
-  - 7.1
+  - 7.2
 
 branches:
   only:
@@ -15,11 +14,9 @@ branches:
 before_script:
  - composer self-update
  - mkdir -p vendor/bin
+ - mkdir -p build/logs
  - composer install -o --prefer-dist --no-interaction
- - mkdir build/logs
+ - nohup php -S 127.0.0.1:8080 -t ./ > build/logs/webserver.log 2>&1 &
 
 script:
- - php vendor/bin/phpunit.phar -c build/
-
-after_success:
- - travis_retry php vendor/bin/coveralls.phar -v --exclude-no-stmt
+ - php vendor/bin/spg.phar check:links -g -b "http://127.0.0.1:8080" ./Project.json
