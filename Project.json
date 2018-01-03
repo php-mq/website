@@ -1,1 +1,41 @@
-{}
+{
+  "name": "PHPMQ - A portable PHP message queue server",
+  "baseUrl": "https://phpmq.org",
+  "outputDir": "./public",
+  "contentsDir": "./docs/",
+  "replacements": {
+    "@website_version@": "v1.0.0",
+    "@website_repo_url@": "https://github.com/php-mq/website",
+    "@github_url@": "https://github.com/phpmq",
+    "@twitter_url@": "https://twitter.com/phpmq",
+    "@twitter_handle@": "@phpmq"
+  },
+  "pages": {
+    "/index.html": {
+      "pageLevel": 1,
+      "navName": "Home",
+      "pageTitle": "Home",
+      "description": "A portable PHP message queue server",
+      "language": "en",
+      "imageUrl": "/img/phpmq-logo-500x500.png",
+      "tags": [
+        "PHP",
+        "Message Queue",
+        "Stream",
+        "TCP",
+        "TLS",
+        "Server",
+        "Client",
+        "Documentation",
+        "Docs"
+      ],
+      "contentType": "html",
+      "renderer": "twig",
+      "template": "templates/home.twig",
+      "contentFile": "",
+      "children": [
+
+      ]
+    }
+  }
+}
