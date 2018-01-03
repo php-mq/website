@@ -33,9 +33,31 @@
       "renderer": "twig",
       "template": "templates/home.twig",
       "contentFile": "",
-      "children": [
-
-      ]
+      "children": []
+    },
+    "/protocol/v1x/index.html": {
+      "pageLevel": 1,
+      "navName": "Protocol",
+      "pageTitle": "Protocol",
+      "description": "The PHPMQ message protocol",
+      "language": "en",
+      "imageUrl": "/img/phpmq-logo-500x500.png",
+      "tags": [
+        "PHP",
+        "Message Protocol",
+        "Stream",
+        "TCP",
+        "TLS",
+        "Server",
+        "Client",
+        "Documentation",
+        "Docs"
+      ],
+      "contentType": "markdown",
+      "renderer": "twig",
+      "template": "templates/home.twig",
+      "contentFile": "protocol/v1x/index.md",
+      "children": []
     }
   }
 }

@@ -4,9 +4,9 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Home | PHPMQ - A portable PHP message queue server</title>
-    <meta name="description" content="A portable PHP message queue server">
-    <meta name="keywords" content="PHP, Message Queue, Stream, TCP, TLS, Server, Client, Documentation, Docs">
+    <title>Protocol | PHPMQ - A portable PHP message queue server</title>
+    <meta name="description" content="The PHPMQ message protocol">
+    <meta name="keywords" content="PHP, Message Protocol, Stream, TCP, TLS, Server, Client, Documentation, Docs">
     <meta name="HandheldFriendly" content="True"/>
     <meta name="geo.region" content="DE-SN"/>
     <meta name="geo.placename" content="Dresden"/>
@@ -87,14 +87,14 @@
             <ul class="nav nav-pills flex-column">
                 
                             <li class="nav-item">
-        <a class="nav-link active"
+        <a class="nav-link"
            href="http://127.0.0.1:8080/index.html">Home</a>
             </li>
 
 
                 
                             <li class="nav-item">
-        <a class="nav-link"
+        <a class="nav-link active"
            href="http://127.0.0.1:8080/protocol/v1x/index.html">Protocol</a>
             </li>
 
@@ -106,13 +106,173 @@
         <main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
 
             
-                <h1>Home</h1>
+                <h1>Protocol</h1>
 
                 <p>
-                    A portable PHP message queue server
+                    The PHPMQ message protocol
                 </p>
 
-                
+                <h2>Message headers</h2>
+<p>Each message sent from a client to the endpoint must have a leading header line which defines:</p>
+<ul>
+<li>A flag that identifies the line as message header </li>
+<li>A number that identifies the version of the message protocol </li>
+<li>The type of the message (see <a href="#message-types">message types</a>) (3 bytes)</li>
+<li>The number of the following packages (see <a href="#packet-types">packet types</a>)</li>
+</ul>
+<p>Example:</p>
+<pre><code class="language-phpmq">H0100102
+
+means:
+
+PACKET-ID | VERSION | MSG-TYPE | PACKAGE COUNT
+        H |      01 |      001 |            02 </code></pre>
+<p>So a header always has a length of 8 byte.</p>
+<h2>Message types</h2>
+<ul>
+<li><code>001</code> - Client sends a message (client to server)</li>
+<li><code>002</code> - Client wants to consume messages (consume request)</li>
+<li><code>003</code> - Server dispatches a message (server to client)</li>
+<li><code>004</code> - Client acknowledges a message (acknowledgement)</li>
+<li><code>005</code> - Client wants to re-queue a message (pop from queue, append to queue)</li>
+<li><code>006</code> - Client sends a dead letter for a message (remove message from queue)</li>
+</ul>
+<h2>Packet headers</h2>
+<p>Each data package in a message is preceded by a packet header which defines:</p>
+<ul>
+<li>A flag that identifies the line as package header</li>
+<li>A number that identifies the packet type</li>
+<li>The length of the following content</li>
+</ul>
+<p>Example:</p>
+<pre><code class="language-phpmq">P01000000000000000000000000000000256
+
+means:
+
+PACKET-ID | PKG-TYPE | CONTENT-LENGTH (as int)
+        P |       01 |                     256</code></pre>
+<p>So a packet header always has a length of 36 bytes.</p>
+<p><strong>Please note:</strong> The content length has a length of 32 bytes and has leading zeros.</p>
+<h2>Packet types</h2>
+<h3>All</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Packet-Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">01</td>
+<td>Queue name</td>
+</tr>
+<tr>
+<td style="text-align: right;">02</td>
+<td>Message content</td>
+</tr>
+<tr>
+<td style="text-align: right;">03</td>
+<td>Message ID</td>
+</tr>
+<tr>
+<td style="text-align: right;">04</td>
+<td>Count of message for consumption</td>
+</tr>
+<tr>
+<td style="text-align: right;">05</td>
+<td>Time to live of message (TTL)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3>For messages from client to endpoint</h3>
+<ul>
+<li><code>01</code> - Queue name</li>
+<li><code>02</code> - Message content</li>
+<li><code>05</code> - Message TTL</li>
+</ul>
+<h3>For messages from endpoint to client</h3>
+<ul>
+<li><code>01</code> - Queue name</li>
+<li><code>02</code> - Message content</li>
+<li><code>03</code> - Message ID</li>
+<li><code>05</code> - Message TTL</li>
+</ul>
+<h3>For Consumption</h3>
+<ul>
+<li><code>01</code> - Queue name</li>
+<li><code>04</code> - Count of messages the client wants to consume from the queue</li>
+</ul>
+<h3>For message acknowledgment</h3>
+<ul>
+<li><code>01</code> - Queue name</li>
+<li><code>03</code> - Message ID</li>
+</ul>
+<h3>For message re-queue</h3>
+<ul>
+<li><code>01</code> - Queue name</li>
+<li><code>03</code> - Message ID</li>
+<li><code>05</code> - Message TTL</li>
+</ul>
+<h3>For dead letter</h3>
+<ul>
+<li><code>01</code> - Queue name</li>
+<li><code>03</code> - Message ID</li>
+</ul>
+<hr />
+<h2>Full message examples</h2>
+<h3>Send a message</h3>
+<p>Client sends a new message with content &quot;Hello World&quot; for queue &quot;Foo&quot; to server with a TTL of 3600 seconds.</p>
+<pre><code class="language-phpmq">H0100103
+P0100000000000000000000000000003
+Foo
+P0200000000000000000000000000011
+Hello World
+P0500000000000000000000000000004
+3600</code></pre>
+<h3>Consume messages</h3>
+<p>Client wants to consume 5 messages from queue &quot;Foo&quot;.</p>
+<pre><code class="language-phpmq">H0100202
+P0100000000000000000000000000003
+Foo
+P0400000000000000000000000000001
+5</code></pre>
+<h3>Dispatch a message</h3>
+<p>Server sends the message above to the client 300 seconds later.</p>
+<pre><code class="language-phpmq">H0100304
+P0100000000000000000000000000003
+Foo
+P0200000000000000000000000000011
+Hello World
+P0300000000000000000000000000032
+d7e7f68761d34838494b233148b5486c
+P0500000000000000000000000000004
+3300</code></pre>
+<p><strong>Note:</strong> TTL was reduced to 3300 seconds.</p>
+<h3>Acknowledge a message</h3>
+<p>Client acknowledges the consumed message with ID <code>d7e7f68761d34838494b233148b5486c</code>.</p>
+<pre><code class="language-phpmq">H0100402
+P0100000000000000000000000000003
+Foo
+P0300000000000000000000000000032
+d7e7f68761d34838494b233148b5486c</code></pre>
+<h3>Re-queue a message</h3>
+<p>Client wants the message to be re-queued at the end of the queue, with a new TTL of 3600 seconds.</p>
+<pre><code class="language-phpmq">H0100503
+P0100000000000000000000000000003
+Foo
+P0300000000000000000000000000032
+d7e7f68761d34838494b233148b5486c
+P0500000000000000000000000000004
+3600</code></pre>
+<h3>Send a dead letter</h3>
+<p>Client wants the message to be removed from queue, regardless its TTL</p>
+<pre><code class="language-phpmq">H0100602
+P0100000000000000000000000000003
+Foo
+P0300000000000000000000000000032
+d7e7f68761d34838494b233148b5486c</code></pre>
 
             
         </main>

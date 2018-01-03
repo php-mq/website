@@ -7,4 +7,11 @@
       <image:caption>Home</image:caption>
     </image:image>
   </url>
+  <url>
+    <loc>http://127.0.0.1:8080/protocol/v1x/index.html</loc>
+    <image:image>
+      <image:loc>http://127.0.0.1:8080/img/phpmq-logo-500x500.png</image:loc>
+      <image:caption>Protocol</image:caption>
+    </image:image>
+  </url>
 </urlset>

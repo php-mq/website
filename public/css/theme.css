@@ -4,17 +4,68 @@
 
 /* Move down content because we have a fixed navbar that is 50px tall */
 body {
-  padding-top: 50px;
+    padding: 20px 0;
+    color: #545454;
 }
 
 /*
  * Typography
  */
 
+h1, h2, h3, h4, h5 {
+    color: #222222;
+}
+
 h1 {
-  margin-bottom: 20px;
-  padding-bottom: 9px;
-  border-bottom: 1px solid #eee;
+    margin-bottom: 20px;
+    padding-bottom: 9px;
+    border-bottom: 1px solid #eee;
+}
+
+h2, h3, h4, h5 {
+    margin-top: 20px;
+}
+
+code {
+    color: #ed1c24;
+}
+
+a, a:visited {
+    color: #28a745;
+}
+
+a:hover, a:active, a:focus {
+    color: #ed1c24;
+}
+
+table {
+    border: 1px solid #8c9298;
+}
+
+table th {
+    background-color: #8c9298;
+    color: #fefefe;
+}
+
+table tr:nth-child(odd) td {
+    background-color: #fafafa;
+}
+
+table th,
+table td {
+    border: 1px solid #8c9298;
+    border-collapse: collapse;
+    padding: 2px 5px;
+}
+
+blockquote {
+    border-left: 3px solid #28a745;
+    padding: 0 0 0 15px;
+}
+
+footer {
+    margin-top: 20px;
+    font-size: smaller;
 }
 
 /*
@@ -22,49 +73,84 @@ h1 {
  */
 
 .sidebar {
-  position: fixed;
-  top: 51px;
-  bottom: 0;
-  left: 0;
-  z-index: 1000;
-  padding: 20px;
-  overflow-x: hidden;
-  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
-  border-right: 1px solid #eee;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    padding: 0 20px;
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+    border-right: 5px solid #8c9298;
+    background-color: #343a40;
 }
 
 /* Sidebar navigation */
 .sidebar {
-  padding-left: 0;
-  padding-right: 0;
+    padding-left: 0;
+    padding-right: 0;
 }
 
 .sidebar .nav {
-  margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 .sidebar .nav-item {
-  width: 100%;
+    width: 100%;
 }
 
 .sidebar .nav-item + .nav-item {
-  margin-left: 0;
+    margin-left: 0;
 }
 
 .sidebar .nav-link {
-  border-radius: 0;
+    border-radius: 0;
+    color: rgba(255, 255, 255, .5);
+}
+
+.sidebar .nav-link:hover,
+.sidebar .nav-link:active,
+.sidebar .nav-link:focus {
+    color: #fefefe;
+}
+
+.sidebar .nav-link.active {
+    background-color: #8c9298;
+    color: #fefefe;
 }
 
 /*
  * Dashboard
  */
 
- /* Placeholders */
+/* Placeholders */
 .placeholders {
-  padding-bottom: 3rem;
+    padding-bottom: 3rem;
 }
 
 .placeholder img {
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
+#brand-img {
+    background-color: #343a40;
+}
+
+#search-input {
+    border-radius: 0;
+    border-color: transparent;
+    border-bottom: 2px solid #28a745;
+    background-color: #444a50;
+    -webkit-transition: border 500ms ease-out;
+    -moz-transition: border 500ms ease-out;
+    -o-transition: border 500ms ease-out;
+    transition: border 500ms ease-out;
+}
+
+#search-input:focus {
+    outline: 0;
+    box-shadow: none;
+    border-bottom: 2px solid #ed1c24;
+    color: #fefefe;
 }
